@@ -6,6 +6,8 @@ if (!window.WebSocket)
     document.body.innerHTML = 'WebSocket в этом браузере не поддерживается.';
 }
 
+appendTextToArea("111111111111111111111111111");
+
 var debug = function(string)
 {
     console.log(string);
@@ -32,7 +34,20 @@ socket.onclose = function(event)
 
 socket.onmessage = function(event)
 {
-    debug("Получены данные " + event.data);
+    var data = event.data;
+    var commant_end = data.indexOf(">")
+    var command = data.substring(0, commant_end - 1 );
+    var msg = data.substring(commant_end + 1, data.length - 1);
+    debug("Message from server: " + event.data);
+
+    switch (command)
+    {
+    case "0": //just message
+        appendTextToArea(msg);
+        break;
+    }
+
+
 };
 
 socket.onerror = function(error)
@@ -42,6 +57,7 @@ socket.onerror = function(error)
 
 var sendMessage = function(string)
 {
+    string = "0>" + string;
     socket.send(string);
 }
 
@@ -53,5 +69,12 @@ $('#submitmsg').bind('click', function()
 
     sendMessage(text);
 });
+
+function appendTextToArea(text)
+{
+    $('<p>Text</p>').appendTo('#chatbox');
+  //  $('#chatbox').val($('#chatbox').val() + text);
+    //$('#usermsg').append(text);
+}
 
 debug("1111111111")
