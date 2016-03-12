@@ -58,25 +58,40 @@ function onListening() {
 }
 
 
-server.on("text", function (str)
+serverWS.on("text", function (str)
 {
     debug("Received "+str)
-    conn.sendText(str.toUpperCase()+"!!!")
+    conn.sendText(" text !!!")
 })
 
-server.on("close", function (code, reason)
+serverWS.on("open", function (str)
 {
-    debug("Connection closed")
-    //delete clients[id];
-})
-
-server.on('message', function(message)
-{
-    debug ('получено сообщение ' + message);
-    /* for (var key in clients) {
-     clients[key].send(message);
-     }*/
+    debug("open  "+str)
+    conn.send("server see you (open)");
 });
+
+serverWS.on('connection', function(conn)
+{
+    conn.send("server see you (connection)");
+    console.log("новое соединение " + conn);
+
+    conn.on("close", function (code, reason)
+    {
+        debug("Connection closed")
+        //delete clients[id];
+    });
+
+    conn.on('message', function( message)
+    {
+        debug (message );
+       // user.send("server see your message " + message);
+        /* for (var key in clients) {
+         clients[key].send(message);
+         }*/
+    });
+});
+
+
 
 var sendBroadcast = function broadcast(server, msg)
 {

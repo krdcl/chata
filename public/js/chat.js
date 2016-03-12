@@ -9,10 +9,12 @@ if (!window.WebSocket)
 var debug = function(string)
 {
     console.log(string);
-    alert(string);
+  // alert(string);
 }
 
-var socket = new WebSocket("ws://localhost:8181");
+var portWeb =  3001;
+
+var socket = new WebSocket("ws://127.0.0.1:" + portWeb);
 
 socket.onopen = function() {
     debug("Соединение установлено.");
@@ -31,7 +33,6 @@ socket.onclose = function(event)
 socket.onmessage = function(event)
 {
     debug("Получены данные " + event.data);
-
 };
 
 socket.onerror = function(error)
@@ -47,7 +48,10 @@ var sendMessage = function(string)
 
 $('#submitmsg').bind('click', function()
 {
-    var text = $('textarea#usermsg').val();
-    debug(text);
+    var text = $('#usermsg').val();
+    debug("mesg value: " + text);
+
     sendMessage(text);
 });
+
+debug("1111111111")
