@@ -6,7 +6,6 @@ var debug = function(string)
 
 /* Requires */
 var favicon = require('serve-favicon');
-var readline = require('readline');
 var express = require('express');
 var https = require('https');
 var http = require('http');
@@ -17,8 +16,8 @@ var pack = require('./package.json');
 var path = require('path');
 var websocket  = require('ws');
 
-var port = 3000;
-var portWeb =  3001;
+var port = config.port;
+var portWeb =  config.portws;
 var app = express();
 var server;
 
@@ -45,12 +44,16 @@ function removeClientById(id)
     {
         if (client.id == id)
         {
-            delete clients[counter];
+           // delete clients[counter];
+            clients.splice(id,1);
             clients_count--;
             return ;
         }
         counter++;
     });
+
+    for (var i = counter; i < clients.length; i++ )
+        clients[i].id = i;
 }
 
 function sendMessageToClientById(id, message)
@@ -63,9 +66,6 @@ function sendMessageToAllClients(message)
 {
     clients.forEach(function(client)
     {
-       // debug(client);
-        /*for (key in client)
-        debug(key);*/
        var connection =  client.connection;
        connection.send(message);
     });
@@ -130,23 +130,27 @@ serverWS.on('connection', function(conn)
     var id = clients_count;
     clients_count++;
 
-    conn.send("[0]connected");
-    console.log("новое соединение " + conn);
+    //conn.send("connected");
+    debug("new connection " + conn);
 
     var client = {
         "id": id,
-        "name": "user_" + getRandomStr + "_" + id,
+        "name": "user_" + getRandomStr() + "_" + id,
         "connection": conn,
         "role": 0 //user
     };
 
+    conn.send("1>" + client.name);
+    sendMessageToAllClients("0>" + client.name + " online ")
+
     clients.push(client);
-   // clients.
 
     conn.on("close", function (code, reason)
     {
-        debug("Connection closed")
+        debug("Connection closed");
         removeClientById(id);
+        sendMessageToAllClients("0>" + client.name + " go offline ")
+
     });
 
     conn.on('message', function( message)
@@ -160,7 +164,8 @@ serverWS.on('connection', function(conn)
         switch (command)
         {
             case "0": //just message broadcast
-                sendMessageToAllClients(msg);
+                var sended_msg = "0>from " +  client.name + ": " + msg;
+                sendMessageToAllClients(sended_msg);
             break;
         }
        // user.send("server see your message " + message);
@@ -171,11 +176,11 @@ serverWS.on('connection', function(conn)
 });
 
 
-
+/*
 var sendBroadcast = function broadcast(server, msg)
 {
     server.connections.forEach(function (conn)
     {
         conn.sendText(msg);
     })
-}
+}*/

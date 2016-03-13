@@ -16,17 +16,15 @@
 <body>
 <div id="wrapper">
     <div id="menu">
-        <p class="welcome">Welcome <b></b></p>
+        <p class="welcome" id="welcome">Welcome <b></b></p>
         <p class="logout"><a id="exit">Logout</a></p>
         <div style="clear:both"></div>
     </div>
 
-    <div id="chatbox">asdfasdfsafd
+    <div id="chatbox"></div>
 
-    </div>
-
-    <form name="message" action="">
-        <input name="usermsg" type="text" id="usermsg" size="63" />
+    <form name="message" id="message_form" action="">
+        <input name="usermsg" type="text" id="usermsgid" size="63" wrap="hard"/>
         <input name="submitmsg" type="button"  id="submitmsg" value="Send" />
     </form>
 </div>

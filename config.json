@@ -1,14 +1,12 @@
 {
 	"log": true,
-	"port": 3000,
+	"host" : "localhost",
 	"url": "/",
+	"port": 3000,
+	"portws": 3001,
 	"ssl": {
 		"use": false,
 		"key": "/path/to/your/ssl.key",
 		"cert": "/path/to/your/ssl.crt"	
-	},
-        "readline": {
-        	"use": true,
-		"prompt": "[--:--:--][CONSOLE] "
-        }
+	}
 }
